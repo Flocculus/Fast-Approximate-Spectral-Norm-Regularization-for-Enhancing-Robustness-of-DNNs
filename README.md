@@ -1,11 +1,10 @@
-# Parallel-beam X-ray CT Reconstruction by Using Pixel-basis
+# Fast Approximate Spectral Norm Regularization for Enhancing Robustness of DNNs
 
-This is a matlab implemention of the reconstruction algorithm proposed in the paper parallel-beam X-ray CT reconstruction by using pixel-basis.
+This is a pytorch implemention of the fast spectral norm regularization algorithm proposed in the paper Fast Approximate Spectral Norm Regularization for Enhancing Robustness of DNNs.
 
 ## Usage
-Run the test_recon.m file to test the reconstruction time, SNR and SSIM.
 
-Run the test_backprojection.m file to test the backprojection SNR and SSIM. 
+The 'GPU_version.py' will compare our fast spectral norm regularization algorithm with the [newest algorithm](https://arxiv.org/abs/1705.10941). You can modify row 302 to switch loss among none regularizer (```loss = loss```), our regularizer (```loss = loss + loss_my_conv```) and newest regularizer (```loss = loss + loss_old_conv```).
 
 ## Test Result
 ![](https://github.com/Flocculus/Fast-Approximate-Spectral-Norm-Regularization-for-Enhancing-Robustness-of-DNNs/blob/master/Fig/F1.png)
