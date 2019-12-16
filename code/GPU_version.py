@@ -1,31 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Nov  9 21:02:45 2019
-
-@author: zs919
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Nov  7 14:43:18 2019
-
-@author: zs919
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Nov  7 11:11:02 2019
-
-@author: zs919
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Nov  6 18:50:31 2019
-
-@author: zs919
-"""
-
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
@@ -109,47 +81,6 @@ class MySpec_conv(torch.autograd.Function):
         absFxri = torch.unsqueeze(absFxri,4)  
         Fxri = torch.ifft(torch.mul(Fxri,absFxri),2)
         Fxri = Fxri[:,:,:,:,0]
-        
-        '''
-        d = xr.shape[2]
-        output = torch.cuda.FloatTensor(xr.shape[0],xr.shape[1],xr.shape[2],xr.shape[3],2).fill_(0)
-        for i in range(xr.shape[0]):
-            for j in range(xr.shape[1]):
-                ind = torch.argmax(absFxri[i,j,:,:])
-                r = ind/d
-                c = ind%d
-                R = d-r
-                C = d-c    
-                if R == d:
-                    R = 0
-                if C == d:
-                    C = 0
-                output[i,j,r,c,0] = Fxri[i,j,r,c,0]
-                output[i,j,R,c,0] = Fxri[i,j,R,c,0]
-                output[i,j,r,c,1] = Fxri[i,j,r,c,1]
-                output[i,j,R,c,1] = Fxri[i,j,R,c,1]
-        
-        weightc = weightc.detach().cpu().numpy()
-        x = inputc.detach().cpu().numpy()
-        [r,c,d,n] = x.shape
-        fft2x = np.fft.fft2(x,axes = [2,3])
-        absfft2x = np.abs(fft2x)
-        output = np.zeros([r,c,d,n],dtype='complex')
-        for i in range(r):
-            for j in range(c):
-                ind = np.unravel_index(np.argmax(absfft2x[i,j,:,:], axis=None), absfft2x[i,j,:,:].shape)
-                #val = absfft2x[i,j,ind[0],ind[1]]
-                ix = d-ind[0]
-                iy = n-ind[1]
-                if ix == d:
-                    ix = 0
-                if iy == n:
-                    iy = 0
-                output[i,j,ind[0],ind[1]] = fft2x[i,j,ind[0],ind[1]]
-                output[i,j,ix,iy] = fft2x[i,j,ix,iy]
-        diff_x = np.fft.ifft2(output,axes = [2,3])
-        '''
-        
         
         
         del m1
@@ -316,10 +247,7 @@ trainloader = torch.utils.data.DataLoader(trainset, batch_size=32,shuffle=True, 
 testset = GTSBDataset(root='./', train=False, transform=transform_test)
 testloader = torch.utils.data.DataLoader(trainset, batch_size=100,shuffle=False, num_workers=0)
 
-
-#classes = ('plane', 'car', 'bird', 'cat','deer', 'dog', 'frog', 'horse', 'ship', 'truck')
-
-    
+  
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print(device)
@@ -338,7 +266,7 @@ oldSpec_conv = OldSpec_conv.apply
 testacc = []
 trainacc = []
 
-optimizer = optim.SGD(net.parameters(), lr=1e-2, momentum=0.9,weight_decay=0)#原来momentum是0.9,这会导致我们的方法比原方法在spectorm上差很多
+optimizer = optim.SGD(net.parameters(), lr=1e-2, momentum=0.9,weight_decay=0)
 #optimizer = optim.Adam(net.parameters(), lr=1e-3)
 
 for epoch in range(200):  # loop over the dataset multiple times
@@ -357,21 +285,21 @@ for epoch in range(200):  # loop over the dataset multiple times
         # forward + backward + optimize
         outputs,c1,c2,c3,c4,c5,c6= net(inputs)
         loss = criterion(outputs, labels)
-        '''
+        
         #Our Spec Nrom
         C_mySpec_conv = torch.tensor(0.1).to(device)
         #C_mySpec_fc = torch.tensor(0.01).to(device)
         loss_my_conv =  mySpec_conv(c1,C_mySpec_conv) + mySpec_conv(c2,C_mySpec_conv) + mySpec_conv(c3,C_mySpec_conv) + mySpec_conv(c4,C_mySpec_conv) + mySpec_conv(c5,C_mySpec_conv) + mySpec_conv(c6,C_mySpec_conv)
         #loss_my_fc = mySpec_fc(f1,C_mySpec_fc) + mySpec_fc(f2,C_mySpec_fc) + mySpec_fc(f3,C_mySpec_fc) + mySpec_fc(f4,C_mySpec_fc)
-        '''
         
-        #paper spec nrom
+        
+        #old spec nrom
         C_oldSpec_conv = torch.tensor(0.1).to(device)
         #C_oldSpec_fc = torch.tensor(0.01).to(device)
         loss_old_conv =  oldSpec_conv(c1,C_oldSpec_conv) + oldSpec_conv(c2,C_oldSpec_conv) + oldSpec_conv(c3,C_oldSpec_conv) + oldSpec_conv(c4,C_oldSpec_conv) + oldSpec_conv(c5,C_oldSpec_conv) + oldSpec_conv(c6,C_oldSpec_conv)
         #loss_old_fc = oldSpec_fc(f1,C_mySpec_fc) + oldSpec_fc(f2,C_mySpec_fc) + oldSpec_fc(f3,C_mySpec_fc) + oldSpec_fc(f4,C_mySpec_fc)
         
-        loss = loss + loss_old_conv# + loss_old_conv#+ loss_my_conv #+ loss_old#torch.mul(lambda1,loss_my)+loss
+        loss = loss + loss_old_conv# + loss_old_conv#+ loss_my_conv 
         loss.backward()
         optimizer.step()
 
