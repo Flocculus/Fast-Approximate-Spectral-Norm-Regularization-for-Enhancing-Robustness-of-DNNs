@@ -6,6 +6,9 @@ This is a pytorch implemention of the fast spectral norm regularization algorith
 
 The 'GPU_version.py' will compare our fast spectral norm regularization algorithm with the [newest algorithm](https://arxiv.org/abs/1705.10941). You can modify row 302 to switch loss among none regularizer (```loss = loss```), our regularizer (```loss = loss + loss_my_conv```) and newest regularizer (```loss = loss + loss_old_conv```).
 
+## Dataset
+Please get the data from [here](https://1drv.ms/u/s!Aqx-iMSK3x4dmq4oWXpoUTrV1Wbm6Q?e=h8JeX1).
+
 ## Test Result
 ![](https://github.com/Flocculus/Fast-Approximate-Spectral-Norm-Regularization-for-Enhancing-Robustness-of-DNNs/blob/master/Fig/F1.png)
 
