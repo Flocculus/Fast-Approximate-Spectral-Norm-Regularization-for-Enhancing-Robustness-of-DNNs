@@ -10,7 +10,9 @@ The 'GPU_version.py' will compare our fast spectral norm regularization algorith
 Please get the data from [here](https://1drv.ms/u/s!Aqx-iMSK3x4dmq4oWXpoUTrV1Wbm6Q?e=h8JeX1).
 
 ## Test Result
+
 Here are some of the output.
+
 ![](https://github.com/Flocculus/DCGAN_CATFACE/blob/master/someoutput/1.png)
 
 ![](https://github.com/Flocculus/DCGAN_CATFACE/blob/master/someoutput/9.png)
